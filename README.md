@@ -7,7 +7,9 @@ Environment variables:
 - `GPSD_SERVER` - The IP and port of the gpsd process. (default: localhost:2947)
 
 Commands:
-`$ go run yogogps.go` -- is the easiest way
+The simple compile and run in one:
+`$ go run yogogps.go`
+Or compile and then run the binary:
 ```shell
 $ go build yogogps.go
 $ ./yogogps.go
