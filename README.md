@@ -1,6 +1,8 @@
 YoGoGPS
 =======
 
+## Overview
+
 A simple web server that serves up GPSD SKY and TPV data via SSE (ServerSideEvents).
 
 Environment variables:
@@ -19,3 +21,7 @@ $ ./yogogps.go
 ```
 
 Note: `go install` won't work unless you then run it from the current project directory due to the required template and static files.
+
+## Thanks
+SSE Go example - https://gist.github.com/rikonor/e53a33c27ed64861c91a095a59f0aa44
+GPSD Client for go - https://github.com/stratoberry/go-gpsd

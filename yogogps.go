@@ -106,6 +106,7 @@ func home(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	// note: SSE code from https://gist.github.com/rikonor/e53a33c27ed64861c91a095a59f0aa44
 	nc := NewNotificationCenter()
 	// gpsd handling
 	var gps *gpsd.Session
