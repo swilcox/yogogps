@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"math"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/stratoberry/go-gpsd"
@@ -105,6 +107,28 @@ func home(w http.ResponseWriter, req *http.Request) {
 	renderTemplate(w, "home")
 }
 
+func ComputeGridSquare(lat float64, lon float64) string {
+	gridSquare := ""
+	letters := [26]string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+	lon += 180
+	lat += 90
+	div20 := int(math.Floor(lon / 20.0))
+	gridSquare += letters[div20]
+	div10 := int(math.Floor(lat / 10.0))
+	gridSquare += letters[div10]
+	div2 := int(math.Floor(lon/2.0)) % 10
+	gridSquare += fmt.Sprint(div2)
+	gridSquare += fmt.Sprint(int(math.Floor(lat)) % 10)
+	gridSquare += strings.ToLower(letters[int(math.Floor(math.Mod(lon, 2.0)*12.0))])
+	gridSquare += strings.ToLower(letters[int(math.Floor(math.Mod(lat, 1.0)*24.0))])
+	return gridSquare
+}
+
+type AugmentedTPV struct {
+	gpsd.TPVReport
+	GridSquare string
+}
+
 func main() {
 	// note: SSE code from https://gist.github.com/rikonor/e53a33c27ed64861c91a095a59f0aa44
 	nc := NewNotificationCenter()
@@ -120,8 +144,10 @@ func main() {
 	}
 	gps.AddFilter("TPV", func(r interface{}) {
 		tpv := r.(*gpsd.TPVReport)
+		aTPV := AugmentedTPV{*tpv, ComputeGridSquare(tpv.Lat, tpv.Lon)}
 		var tpvJSON []byte
-		tpvJSON, err = json.Marshal(tpv)
+		tpvJSON, err = json.Marshal(aTPV)
+
 		if err != nil {
 			fmt.Println(err)
 		}

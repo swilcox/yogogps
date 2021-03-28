@@ -16,7 +16,7 @@ source.onmessage = function showData(event) {
         latField.innerText = data.lat;
         lonField.innerText = data.lon;
         altField.innerText = data.alt + "m";
-        gridField.innerText = "EM65ms";
+        gridField.innerText = data.GridSquare;
     }
     if (data.class == "SKY") {
         const satelliteData = document.getElementById('satellite-data');
