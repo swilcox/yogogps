@@ -1,3 +1,5 @@
+![github actions status](https://github.com/swilcox/yogogps/actions/workflows/go.yml/badge.svg)
+
 YoGoGPS
 =======
 
