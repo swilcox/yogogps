@@ -5,7 +5,7 @@ source.onmessage = function showData(event) {
     // in this case, our server sends us a stringified JSON object 
     // that we can parse below
     const data = JSON.parse(event.data);
-    console.log(data);
+    // console.log(data);
     if (data.class == "TPV") {        
         const timeField = document.getElementById('time-value');
         const latField = document.getElementById('lat-value');
