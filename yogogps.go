@@ -112,12 +112,9 @@ func ComputeGridSquare(lat float64, lon float64) string {
 	letters := [26]string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 	lon += 180
 	lat += 90
-	div20 := int(math.Floor(lon / 20.0))
-	gridSquare += letters[div20]
-	div10 := int(math.Floor(lat / 10.0))
-	gridSquare += letters[div10]
-	div2 := int(math.Floor(lon/2.0)) % 10
-	gridSquare += fmt.Sprint(div2)
+	gridSquare += letters[int(math.Floor(lon/20.0))]
+	gridSquare += letters[int(math.Floor(lat/10.0))]
+	gridSquare += fmt.Sprint(int(math.Floor(lon/2.0)) % 10)
 	gridSquare += fmt.Sprint(int(math.Floor(lat)) % 10)
 	gridSquare += strings.ToLower(letters[int(math.Floor(math.Mod(lon, 2.0)*12.0))])
 	gridSquare += strings.ToLower(letters[int(math.Floor(math.Mod(lat, 1.0)*24.0))])
