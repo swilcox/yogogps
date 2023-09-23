@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/stratoberry/go-gpsd"
+	"github.com/swilcox/go-gpsd"
 )
 
 var templates = template.Must(template.ParseFiles("templates/home.html"))
