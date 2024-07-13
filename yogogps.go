@@ -133,12 +133,19 @@ type Metrics struct {
 
 func (m *Metrics) ToPromString() string {
 	return fmt.Sprintf(
-		"yogogps_num_clients %d\n"+
+		"# HELP yogogps_num_clients Number of clients actively connected to the yogogps server.\n"+
+			"# TYPE yogogps_num_clients gauge\n"+
+			"yogogps_num_clients %d\n"+
+			"# HELP yogogps_gps_satellites_count Number of satellites seen by the GPS.\n"+
+			"# TYPE yogogps_gps_satellites_count gauge\n"+
 			"yogogps_gps_satellites_count %d\n"+
+			"# HELP yogogps_gps_lat Computed Latitude.\n"+
+			"# TYPE yogogps_gps_lat gauge\n"+
 			"yogogps_gps_lat %f\n"+
-			"yogogps_gps_lon %f\n"+
-			"yogogps_gps_gridsquare %s\n",
-		m.NumClients, m.SatelliteCount, m.GPSLat, m.GPSLon, m.GPSGridSquare,
+			"# HELP yogogps_gps_lon Computed Longitude.\n"+
+			"# TYPE yogogps_gps_lon gauge\n"+
+			"yogogps_gps_lon %f\n",
+		m.NumClients, m.SatelliteCount, m.GPSLat, m.GPSLon,
 	)
 }
 
