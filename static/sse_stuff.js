@@ -37,11 +37,11 @@ const GNSSMAP = {
 }
 
 function getFlagEmoji(countryCode) {
-  const codePoints = countryCode
-    .toUpperCase()
-    .split('')
-    .map(char =>  127397 + char.charCodeAt());
-  return String.fromCodePoint(...codePoints);
+    const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt());
+    return String.fromCodePoint(...codePoints);
 }
 
 source.onmessage = function showData(event) {
@@ -49,8 +49,8 @@ source.onmessage = function showData(event) {
     // in this case, our server sends us a stringified JSON object 
     // that we can parse below
     const data = JSON.parse(event.data);
-    // console.log(data);
-    if (data.class == "TPV") {        
+    console.log(data);
+    if (data.class == "TPV") {
         const timeField = document.getElementById('time-value');
         const latField = document.getElementById('lat-value');
         const lonField = document.getElementById('lon-value');
@@ -63,6 +63,10 @@ source.onmessage = function showData(event) {
         gridField.innerText = data.GridSquare;
     }
     if (data.class == "SKY") {
+        var satellitesTotal = document.getElementById('satellites-total')
+        var satellitesUsed = document.getElementById('satellites-used')
+        satellitesTotal.innerHTML = data.satellites.length
+        satellitesUsed.innerHTML = 0
         const satelliteData = document.getElementById('satellite-data');
         sHTML = '';
         for (sat of data.satellites) {
@@ -76,7 +80,7 @@ source.onmessage = function showData(event) {
             sHTML += '<td>' + sat.used + '</td>';
             sHTML += '<td>' + sat.health + '</td>';
             sHTML += '</tr>';
-        }        
+        }
         satelliteData.innerHTML = sHTML;
     }
     //const temperatureOutputEl = document.getElementById('temperature-output');

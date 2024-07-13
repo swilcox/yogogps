@@ -1,57 +1,84 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-dark.min.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style></style>
-        <title>GPS SSE Monitor</title>
 
-    </head>
-    <body>
-        <h1>GPS SSE Monitor</h1>
-        <div class="containter">
-            <div class="row">
-                <div class="col-sm-6">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Field</th><th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Time</td><td id="time-value">--</td></tr>
-                            <tr><td>Latitude</td><td id="lat-value"></td></tr>
-                            <tr><td>Longitude</td><td id="lon-value"></td></tr>
-                            <tr><td>Altitude</td><td id="alt-value"></td></tr>
-                            <tr><td>Grid Square</td><td id="grid-square"></td></tr>
-                        </tbody>
-                    </table>            
-                </div>
-                <div class="col-sm-6">
-                    <table style="max-height:fit-content">
-                        <thead>
-                            <tr>
-                                <th colspan="5">Satellites</th>
-                            </tr>
-                            <tr>
-                                <th>GNSS</th><th>PRN</th><th>Elev</th><th>Azim</th><th>SNR</th><th>Used</th><th>Health</th>
-                            </tr>
-                        </thead>
-                        <tbody id="satellite-data">
-                            <tr>
-                                <td>gnss id</td>
-                                <td>prn</td>
-                                <td>elev</td>
-                                <td>azim</td>
-                                <td>snr</td>
-                                <td>used</td>
-                                <td>health</td>
-                            </tr>
-                        </tbody>
-                    </table>                    
-                </div>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-dark.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style></style>
+    <title>GPS SSE Monitor</title>
+
+</head>
+
+<body>
+    <h1>GPS SSE Monitor</h1>
+    <div class="containter">
+        <div class="row">
+            <div class="col-sm-6">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Time</td>
+                            <td id="time-value">--</td>
+                        </tr>
+                        <tr>
+                            <td>Latitude</td>
+                            <td id="lat-value"></td>
+                        </tr>
+                        <tr>
+                            <td>Longitude</td>
+                            <td id="lon-value"></td>
+                        </tr>
+                        <tr>
+                            <td>Altitude</td>
+                            <td id="alt-value"></td>
+                        </tr>
+                        <tr>
+                            <td>Grid Square</td>
+                            <td id="grid-square"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <table style="max-height:fit-content">
+                    <thead>
+                        <tr>
+                            <th colspan="5">Satellites</th>
+                            <th id="satellites-total">0</th>
+                            <th id="satellites-used">0</th>
+                        </tr>
+                        <tr>
+                            <th>GNSS</th>
+                            <th>PRN</th>
+                            <th>Elev</th>
+                            <th>Azim</th>
+                            <th>SNR</th>
+                            <th>Used</th>
+                            <th>Health</th>
+                        </tr>
+                    </thead>
+                    <tbody id="satellite-data">
+                        <tr>
+                            <td>gnss id</td>
+                            <td>prn</td>
+                            <td>elev</td>
+                            <td>azim</td>
+                            <td>snr</td>
+                            <td>used</td>
+                            <td>health</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <script src="./static/sse_stuff.js"></script>
-    </body>
+    </div>
+    <script src="./static/sse_stuff.js"></script>
+</body>
+
 </html>

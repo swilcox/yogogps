@@ -67,6 +67,8 @@ type Notifier interface {
 type NotificationCenter struct {
 	subscribers   map[chan []byte]struct{}
 	subscribersMu *sync.Mutex
+	LastKnownTPV  *AugmentedTPV
+	LastKnownSKY  *gpsd.SKYReport
 }
 
 func NewNotificationCenter() *NotificationCenter {
@@ -94,6 +96,20 @@ func (nc *NotificationCenter) Notify(b []byte) error {
 	nc.subscribersMu.Lock()
 	defer nc.subscribersMu.Unlock()
 
+	var tpv AugmentedTPV
+	if err := json.Unmarshal(b, &tpv); err == nil {
+		if tpv.Class == "TPV" {
+			nc.LastKnownTPV = &tpv
+		}
+	}
+
+	var sky gpsd.SKYReport
+	if err := json.Unmarshal(b, &sky); err == nil {
+		if sky.Class == "SKY" {
+			nc.LastKnownSKY = &sky
+		}
+	}
+
 	for c := range nc.subscribers {
 		select {
 		case c <- b:
@@ -105,6 +121,44 @@ func (nc *NotificationCenter) Notify(b []byte) error {
 
 func home(w http.ResponseWriter, req *http.Request) {
 	renderTemplate(w, "home")
+}
+
+type Metrics struct {
+	NumClients     int
+	GPSGridSquare  string
+	SatelliteCount int
+	GPSLat         float64
+	GPSLon         float64
+}
+
+func (m *Metrics) ToPromString() string {
+	return fmt.Sprintf(
+		"yogogps_num_clients %d\n"+
+			"yogogps_gps_satellites_count %d\n"+
+			"yogogps_gps_lat %f\n"+
+			"yogogps_gps_lon %f\n"+
+			"yogogps_gps_gridsquare %s\n",
+		m.NumClients, m.SatelliteCount, m.GPSLat, m.GPSLon, m.GPSGridSquare,
+	)
+}
+
+func (m *Metrics) ToPromByteArray() []byte {
+	return []byte(m.ToPromString())
+}
+
+func handleMetrics(nc *NotificationCenter) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		nc.subscribersMu.Lock()
+		metrics := &Metrics{
+			NumClients:     len(nc.subscribers),
+			SatelliteCount: len(nc.LastKnownSKY.Satellites),
+			GPSGridSquare:  nc.LastKnownTPV.GridSquare,
+			GPSLat:         nc.LastKnownTPV.Lat,
+			GPSLon:         nc.LastKnownTPV.Lon,
+		}
+		nc.subscribersMu.Unlock()
+		w.Write(metrics.ToPromByteArray())
+	}
 }
 
 func ComputeGridSquare(lat float64, lon float64) string {
@@ -166,8 +220,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	// endpoint paths
-	http.HandleFunc("/", home)
 	http.HandleFunc("/sse", handleSSE(nc))
+	http.HandleFunc("/metrics", handleMetrics(nc))
+	http.HandleFunc("/", home)
 	log.Fatal(http.ListenAndServe(":8555", nil))
 	<-done
 }
