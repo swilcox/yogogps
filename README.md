@@ -7,10 +7,14 @@ YoGoGPS
 
 A simple web server that serves up GPSD SKY and TPV data via SSE (ServerSideEvents).
 
-### Environment variables:
+### Screenshot
+
+![screenshot](./assets/screenshot.jpg)
+
+### Environment variables
 - `GPSD_SERVER` - The IP and port of the gpsd process. (default: `localhost:2947`)
 
-### Commands:
+### Commands
 
 The simple compile and run in one:
 
@@ -26,6 +30,19 @@ $ ./yogogps.go
 ```
 
 Note: `go install` won't work unless you then run it from the current project directory due to the required template and static files.
+
+## Usage
+
+Once running, navigate the running host's URL on port 8555 (e.g. http://localhost:8555) to view the gps information.
+
+### Prometheus-style Metrics
+
+The `/metrics` endpoint provide some basic prometheus style metrics:
+
+* `yogogps_gps_satellites_count` - number of satellites currently received
+* `yogogps_gps_lat` - currently computed latitude
+* `yogogps_gps_lon` - currently computer longitude
+* `yogogps_num_clients` - number of actively attached (SSE) clients viewing/using the server
 
 ## Run Tests
 
